@@ -18,7 +18,7 @@ def build_researcher() -> AssistantAgent:
         ],
         reflect_on_tool_use=True,
         model_context=BufferedChatCompletionContext(buffer_size=40),
-        description="Looks up facts, current events, and academic papers by searching the web "
+        description="Looks up facts online, current events, and academic papers by searching the web "
         "or arXiv; only needed when the task requires external/up-to-date information.",
         system_message="""
         You are the Special Agent Researcher. For a broad research request that
