@@ -10,6 +10,7 @@ def build_coder() -> AssistantAgent:
         name="coder",
         model_client=get_model_client(),
         tools=[read_file, write_file, run_shell],
+        reflect_on_tool_use=True,
         model_context=BufferedChatCompletionContext(buffer_size=40),
         description="Reads/writes code files and runs shell commands; only needed for "
         "programming tasks or answering questions about code.",

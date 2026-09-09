@@ -30,6 +30,7 @@ async def information_summarizer(source: str, question: str = "") -> str:
         name="summarizer",
         model_client=get_model_client(),
         tools=[read_file],
+        reflect_on_tool_use=True,
         system_message=_SYSTEM_MESSAGE,
     )
     task = f"Question: {question}\n\nSource:\n{source}" if question else f"Summarize the following:\n\n{source}"

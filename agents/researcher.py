@@ -16,6 +16,7 @@ def build_researcher() -> AssistantAgent:
             research_workflow, arxiv_search_and_download,
             arxiv_search, information_summarizer, read_file, web_search
         ],
+        reflect_on_tool_use=True,
         model_context=BufferedChatCompletionContext(buffer_size=40),
         description="Looks up facts, current events, and academic papers by searching the web "
         "or arXiv; only needed when the task requires external/up-to-date information.",
