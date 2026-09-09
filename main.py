@@ -121,12 +121,12 @@ async def main(verbose: bool) -> None:
                 route = await _classify(router, context)
                 runner = operations_team if route == "OPERATION" else chat_agent
                 response = await _run_turn(runner, context, verbose)
+                reply = _final_reply_text(response.messages)
             except Exception as e:
                 # A single failed turn (a tool error, a flaky model call, ...)
                 # shouldn't kill the whole session and its conversation memory.
                 print(f"\nTurn failed: {e}")
                 continue
-            reply = _final_reply_text(response.messages)
             history[len(history)] = {"input": task, "response": reply}
             print(f"\nResponse: {reply}")
     except KeyboardInterrupt:

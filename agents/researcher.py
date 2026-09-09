@@ -6,18 +6,29 @@ from tools.common_tools import read_file
 from tools.arxiv_search import arxiv_search, arxiv_search_and_download
 from tools.web_search import web_search
 from tools.summarize_info import information_summarizer
+from worflows.research_workflow import research_workflow
 
 def build_researcher() -> AssistantAgent:
     return AssistantAgent(
         name="researcher",
         model_client=get_model_client(),
-        tools=[web_search, arxiv_search_and_download, arxiv_search, read_file, information_summarizer],
+        tools=[
+            research_workflow, web_search, arxiv_search_and_download,
+            arxiv_search, read_file, information_summarizer,
+        ],
         model_context=BufferedChatCompletionContext(buffer_size=40),
         description="Looks up facts, current events, and academic papers by searching the web "
         "or arXiv; only needed when the task requires external/up-to-date information.",
         system_message="""
-        You are the Special Agent Researcher. Use web_search for general questions, current events,
-        or anything not specifically about academic papers (e.g. dates, facts, news, how-tos).
+        You are the Special Agent Researcher. For a broad research request that
+        needs multiple angles covered and a single coherent write-up (e.g. "research X",
+        "give me a report on Y", open-ended background research), call research_workflow
+        with the task -- it runs a full pipeline (search-query generation, web search,
+        source evaluation, and summarization) and returns a finished cited report.
+
+        For a quick, narrow lookup (a single fact, date, or current-events question),
+        use web_search directly instead of the full pipeline.
+
         Use arxiv_search / arxiv_search_and_download only when the user specifically wants
         academic/research papers from arXiv. Call summarization tools to summarize results
         or look for specific information in them.
