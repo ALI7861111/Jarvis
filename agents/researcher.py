@@ -13,8 +13,8 @@ def build_researcher() -> AssistantAgent:
         name="researcher",
         model_client=get_model_client(),
         tools=[
-            research_workflow, web_search, arxiv_search_and_download,
-            arxiv_search, read_file, information_summarizer,
+            research_workflow, arxiv_search_and_download,
+            arxiv_search, information_summarizer, read_file, web_search
         ],
         model_context=BufferedChatCompletionContext(buffer_size=40),
         description="Looks up facts, current events, and academic papers by searching the web "
@@ -25,9 +25,6 @@ def build_researcher() -> AssistantAgent:
         "give me a report on Y", open-ended background research), call research_workflow
         with the task -- it runs a full pipeline (search-query generation, web search,
         source evaluation, and summarization) and returns a finished cited report.
-
-        For a quick, narrow lookup (a single fact, date, or current-events question),
-        use web_search directly instead of the full pipeline.
 
         Use arxiv_search / arxiv_search_and_download only when the user specifically wants
         academic/research papers from arXiv. Call summarization tools to summarize results
