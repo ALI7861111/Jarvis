@@ -16,7 +16,7 @@ from agents.router import build_router
 from model_client import get_model_client
 
 
-selector_prompt = """You are the operations team router. The following roles are available:
+selector_prompt = """You are the operations team Manager. The following roles are available:
 {roles}
 
 Read the conversation below, then select the next role from {participants} to
