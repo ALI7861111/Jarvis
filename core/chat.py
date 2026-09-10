@@ -4,11 +4,13 @@ from langchain.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder 
 
 prompt = ChatPromptTemplate.from_messages([ 
-    ("system", "You are Jarvis, a helpful AI assistant."), 
+    ("system", "You are Jarvis, a helpful AI assistant."
+                "You have many special tools/agents at your disposal to"
+                "help you answer questions and complete tasks."), 
     MessagesPlaceholder("history"),
     ("human", "{input}") ])
 
-def chat_loop(llm):
+def chat_loop(llm, tools=None):
     """
     This function runs a chat loop with the given language model. It prompts the user for input, 
     sends the input to the model, and prints the model's response.
@@ -21,9 +23,7 @@ def chat_loop(llm):
     while True:
 
         history = []
-
         user_input = input("You: ")
-
         messages = prompt.invoke({
             "input": user_input,
             "history": history
