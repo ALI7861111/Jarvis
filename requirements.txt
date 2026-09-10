@@ -3,3 +3,5 @@ autogen-ext[anthropic,openai,ollama]
 tiktoken
 python-dotenv
 aiohttp
+langchain
+langchain-anthropic
