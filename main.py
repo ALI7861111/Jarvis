@@ -1,33 +1,48 @@
+import getpass
+import urllib.error
+import urllib.request
+
 from langchain_anthropic import ChatAnthropic
+from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+import os
+from dotenv import load_dotenv
+from core.chat import chat_loop
 
-import config
+load_dotenv()
 
-prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are Jarvis, a helpful assistant."),
-    MessagesPlaceholder("history"),
-    ("human", "{input}"),
-])
-
-llm = ChatAnthropic(model=config.MODEL, api_key=config.ANTHROPIC_API_KEY or None)
-chain = prompt | llm
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", "You are Jarvis, a helpful assistant."),
+        MessagesPlaceholder("history"),
+        ("human", "{input}"),
+    ]
+)
 
 
 def main():
-    history = []
-    print("Jarvis chatbot. Type 'exit' to quit.")
+    input_text = input("""
+                        Please Select Model:
+                        1) Anthropic (Claude)      
+                        2) OpenAI (ChatGPT)
+                        3) Ollama (LLaMA)
+                        """)
 
-    while True:
-        user_input = input("You: ").strip()
-        if user_input.lower() in ("exit", "quit"):
-            break
+    if input_text == "1":
+        llm = ChatAnthropic(
+            model=os.getenv("ANTHROPIC_MODEL"), api_key=os.getenv("ANTHROPIC_API_KEY")
+        )
+    if input_text == "2":
+        llm = ChatOpenAI(
+            model=os.getenv("OPENAI_MODEL"), api_key=os.getenv("OPENAI_API_KEY")
+        )
+    if input_text == "3":
+        llm = ChatOllama(model=os.getenv("OLLAMA_MODEL"), host=os.getenv("OLLAMA_HOST"))
 
-        response = chain.invoke({"input": user_input, "history": history})
-        print(f"Jarvis: {response.content}")
-
-        history.append(HumanMessage(content=user_input))
-        history.append(AIMessage(content=response.content))
+    chat_loop(llm)
 
 
 if __name__ == "__main__":

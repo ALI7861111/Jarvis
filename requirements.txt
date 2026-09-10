@@ -5,3 +5,5 @@ python-dotenv
 aiohttp
 langchain
 langchain-anthropic
+langchain-openai
+langchain-ollama
