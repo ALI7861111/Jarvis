@@ -10,7 +10,14 @@ from langchain_core.tools import tool
 
 @tool
 def read_file(path: str) -> str:
-    """Read and return the contents of a text file."""
+    """Read and return the contents of a text file.
+
+    Args:
+        path: The path to the file.
+
+    Returns:
+        The contents of the file.
+    """
     file_path = Path(path)
     if not file_path.is_file():
         raise FileNotFoundError(f"File not found: {path}")
@@ -19,7 +26,13 @@ def read_file(path: str) -> str:
 
 @tool
 def write_file(path: str, content: str) -> str:
-    """Write content to a file, returning a status message."""
+    """Write content to a file, returning a status message.
+    Args:
+        path: The path to the file.
+        content: The content to write.
+    Returns:
+        A status message indicating success or failure.
+    """
     try:
         file_path = Path(path)
         file_path.write_text(content, encoding="utf-8")
@@ -32,7 +45,12 @@ def write_file(path: str, content: str) -> str:
 
 @tool
 def run_shell(command: str) -> str:
-    """Run a shell command and return its output."""
+    """Run a shell command and return its output.
+    Args:
+        command: The shell command to run.
+    Returns:
+        The output of the command, or an error message if it fails.
+    """
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     if result.returncode != 0:
         return (
