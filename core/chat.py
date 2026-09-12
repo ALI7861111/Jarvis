@@ -1,4 +1,4 @@
-from langchain.messages import AIMessage, HumanMessage, ToolMessage
+from langchain.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 prompt = ChatPromptTemplate.from_messages(
@@ -31,35 +31,28 @@ def chat_loop(llm, tools=None):
     llm = llm.bind_tools(tools) if tools else llm
     tools_by_name = {t.name: t for t in tools} if tools else {}
 
+    history = []
+
     while True:
-
-        history = []
         user_input = input("You: ")
-        messages = prompt.invoke({"input": user_input, "history": history})
-
         if user_input.lower() == "exit":
             break
 
-        response = llm.invoke(messages)
+        messages = prompt.invoke({"input": user_input, "history": history}).to_messages()
 
-        if response.tool_calls:
+        while True:
+            response = llm.invoke(messages)
+            messages.append(response)
+
+            if not response.tool_calls:
+                break
+
             for tool_call in response.tool_calls:
-                tool_name = tool_call["name"]
-                tool_args = tool_call["args"]
-                tool_call_id = tool_call["id"]
-                print(f"Tool call detected: {tool_name} with args {tool_args}")
+                print(f"Tool call detected: {tool_call['name']} with args {tool_call['args']}")
+                tool = tools_by_name[tool_call["name"]]
+                tool_message = tool.invoke(tool_call)
+                messages.append(tool_message)
 
-                tool = tools_by_name[tool_name]
-                tool_result = tool.invoke(tool_args)
-                # You might want to add the tool response to the history as well
-                history.append(
-                    ToolMessage(
-                        tool_name=tool_name,
-                        content=tool_result,
-                        tool_call_id=tool_call_id,
-                    )
-                )
-            break
         print(f"AI: {response.content}")
 
         history.append(HumanMessage(content=user_input))
