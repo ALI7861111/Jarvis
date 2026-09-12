@@ -33,12 +33,9 @@ def write_file(path: str, content: str) -> str:
 @tool
 def run_shell(command: str) -> str:
     """Run a shell command and return its output."""
-    result = subprocess.run(
-        command,
-        shell=True,
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
     if result.returncode != 0:
-        return f"Command failed (exit code {result.returncode}):\n{result.stderr.strip()}"
+        return (
+            f"Command failed (exit code {result.returncode}):\n{result.stderr.strip()}"
+        )
     return result.stdout.strip()

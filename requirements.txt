@@ -1,9 +1,9 @@
-autogen-agentchat
-autogen-ext[anthropic,openai,ollama]
+autogen - agentchat
+autogen - ext[anthropic, openai, ollama]
 tiktoken
-python-dotenv
+python - dotenv
 aiohttp
 langchain
-langchain-anthropic
-langchain-openai
-langchain-ollama
+langchain - anthropic
+langchain - openai
+langchain - ollama

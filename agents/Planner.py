@@ -3,8 +3,6 @@ import json
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 
-
-
 PLANNER_SYSTEM_PROMPT = (
     "You are a planning agent. Break down a complex task into a short, "
     "ordered list of simpler subtasks that can each be accomplished on "
@@ -12,10 +10,13 @@ PLANNER_SYSTEM_PROMPT = (
     "markdown fences."
 )
 
-prompt = ChatPromptTemplate.from_messages([
-    ("system", PLANNER_SYSTEM_PROMPT),
-    ("human", "{task}"),
-])
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", PLANNER_SYSTEM_PROMPT),
+        ("human", "{task}"),
+    ]
+)
+
 
 @tool
 def plan(llm, task: str) -> list[str]:
@@ -40,4 +41,6 @@ def plan(llm, task: str) -> list[str]:
         pass
 
     # Fallback if the model didn't return valid JSON: one step per non-empty line.
-    return [line.strip("-*0123456789. \t") for line in content.splitlines() if line.strip()]
+    return [
+        line.strip("-*0123456789. \t") for line in content.splitlines() if line.strip()
+    ]

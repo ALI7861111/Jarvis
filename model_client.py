@@ -42,11 +42,15 @@ def _build_openai(api_key: str) -> OpenAIChatCompletionClient:
 
 
 def _build_ollama() -> OllamaChatCompletionClient:
-    return OllamaChatCompletionClient(model=config.OLLAMA_MODEL, host=config.OLLAMA_HOST)
+    return OllamaChatCompletionClient(
+        model=config.OLLAMA_MODEL, host=config.OLLAMA_HOST
+    )
 
 
 def _prompt_for_new_key():
-    print("No local Ollama server detected and no ANTHROPIC_API_KEY / OPENAI_API_KEY found.")
+    print(
+        "No local Ollama server detected and no ANTHROPIC_API_KEY / OPENAI_API_KEY found."
+    )
     print("  1) Anthropic (Claude)")
     print("  2) OpenAI (ChatGPT)")
     choice = input("Choose a provider [1/2]: ").strip()
@@ -64,15 +68,21 @@ def _choose_provider():
     if _ollama_running():
         options.append(("Ollama (local)", config.OLLAMA_MODEL, _build_ollama))
     if config.ANTHROPIC_API_KEY:
-        options.append((
-            "Anthropic (Claude)", config.MODEL,
-            lambda: _build_anthropic(config.ANTHROPIC_API_KEY),
-        ))
+        options.append(
+            (
+                "Anthropic (Claude)",
+                config.MODEL,
+                lambda: _build_anthropic(config.ANTHROPIC_API_KEY),
+            )
+        )
     if config.OPENAI_API_KEY:
-        options.append((
-            "OpenAI (ChatGPT)", config.OPENAI_MODEL,
-            lambda: _build_openai(config.OPENAI_API_KEY),
-        ))
+        options.append(
+            (
+                "OpenAI (ChatGPT)",
+                config.OPENAI_MODEL,
+                lambda: _build_openai(config.OPENAI_API_KEY),
+            )
+        )
 
     if not options:
         return _prompt_for_new_key()
