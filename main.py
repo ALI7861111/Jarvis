@@ -11,7 +11,8 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 import os
 from dotenv import load_dotenv
 from core.chat import chat_loop
-
+from tools.common_tools import read_file, write_file, run_shell
+from agents.planner import plan
 load_dotenv()
 
 prompt = ChatPromptTemplate.from_messages(
@@ -42,7 +43,7 @@ def main():
     if input_text == "3":
         llm = ChatOllama(model=os.getenv("OLLAMA_MODEL"), host=os.getenv("OLLAMA_HOST"))
 
-    chat_loop(llm)
+    chat_loop(llm, tools=[read_file, write_file, run_shell, plan])
 
 
 if __name__ == "__main__":

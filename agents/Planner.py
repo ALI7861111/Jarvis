@@ -1,6 +1,9 @@
 import json
 
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.tools import tool
+
+
 
 PLANNER_SYSTEM_PROMPT = (
     "You are a planning agent. Break down a complex task into a short, "
@@ -14,9 +17,9 @@ prompt = ChatPromptTemplate.from_messages([
     ("human", "{task}"),
 ])
 
-    
+@tool
 def plan(llm, task: str) -> list[str]:
-    """Break a complex task down into a list of simpler subtasks.
+    """This tool breaks a complex task down into a list of simpler subtasks.
 
     Args:
         llm: A LangChain chat model instance (must implement invoke).
